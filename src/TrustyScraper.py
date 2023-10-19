@@ -26,7 +26,7 @@ def get_page(company_name, page_num):
 
 # Function to scrape reviews from Trustpilot.com and save to csv file
 # Takes the subdirectory/company name as an argument
-def scrape_reviews(company):
+def scrape_reviews(company, first_page=1):
 
     # Initialize lists to store scraped data
     review_titles = []
@@ -39,11 +39,9 @@ def scrape_reviews(company):
     section_class = "styles_reviewContentwrapper__zH_9M"
     text_class = "styles_reviewContent__0Q2Tg"
     title_class = "styles_reviewHeader__iU9Px"
-    language_class = "review-content__language"
     pagination_class = "styles_pagination__6VmQv"
 
     # Get the first page
-    first_page = 1
     page = get_page(company, first_page)
 
     # Get last page number
@@ -79,7 +77,6 @@ def scrape_reviews(company):
             review_stars.append(review_star)
 
             # Find the review language and append to list; if no language, append "nd"
-            #review_language = review.find('div', class_=language_class)
             try:
                 review_language = review.find("div",{"class":text_class})["lang"]
             except KeyError:
@@ -106,7 +103,7 @@ def scrape_reviews(company):
 
     # save the dataframe to a csv file
     today = datetime.today()
-    trustpilot_reviews = df.to_csv(f"{today:%Y%m%d}_{company}_trustpilot_reviews_raw.csv")
+    trustpilot_reviews = df.to_csv("tests/" + f"{today:%Y%m%d}_{company}_trustpilot_reviews_raw.csv")
     
 
 
